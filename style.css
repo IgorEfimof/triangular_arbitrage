@@ -52,7 +52,7 @@ h1, h2 {
   color: #ffffff;
 }
 
-#calculateBtn, #saveHistoryButton {
+#calculateBtn {
   width: 100%;
   padding: 15px;
   margin-top: 20px;
@@ -65,7 +65,7 @@ h1, h2 {
   transition: background-color 0.3s;
 }
 
-#calculateBtn:hover, #saveHistoryButton:hover {
+#calculateBtn:hover {
   background-color: #00c853;
 }
 
@@ -86,4 +86,28 @@ h1, h2 {
   margin-bottom: 8px;
   font-size: 16px;
 }
+
+/* Новые кнопки сохранения и очистки истории */
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#saveHistoryButton, #clearHistoryButton {
+  flex: 1;
+  padding: 12px;
+  background-color: #00e676;
+  color: #000;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#saveHistoryButton:hover, #clearHistoryButton:hover {
+  background-color: #00c853;
+}
+
 
