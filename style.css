@@ -1,0 +1,103 @@
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+input, button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+input {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#result {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+}
+
+#history {
+  margin-top: 30px;
+}
+
+.history-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#clearHistoryButton {
+  padding: 8px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#clearHistoryButton:hover {
+  background-color: #d32f2f;
+}
+
+#saveHistoryButton {
+  padding: 8px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#saveHistoryButton:hover {
+  background-color: #1976D2;
+}
+
+#historyList {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#historyList li {
+  margin-bottom: 5px;
+  background-color: #1e1e1e;
+  padding: 8px;
+  border-radius: 6px;
+}
