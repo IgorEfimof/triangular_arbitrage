@@ -17,6 +17,8 @@ function calculateArbitrage() {
     } else {
       resultText += `<p style="color: #ff1744;">Арбитраж невозможен.</p>`;
     }
+  } else {
+    resultText += `<p style="color: #ff1744;">Введите корректные коэффициенты для расчета.</p>`;
   }
 
   resultDiv.innerHTML = resultText;
@@ -52,4 +54,10 @@ document.getElementById('saveHistoryButton').addEventListener('click', function(
   link.click();
   document.body.removeChild(link);
 });
+
+document.getElementById('clearHistoryButton').addEventListener('click', function() {
+  const historyList = document.getElementById('historyList');
+  historyList.innerHTML = '';
+});
+
 
