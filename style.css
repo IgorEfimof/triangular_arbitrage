@@ -7,97 +7,83 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
 }
 
 h1, h2 {
   text-align: center;
+  color: #00e676;
 }
 
-form {
+.card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.input-block {
+  flex: 1 1 45%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
 }
 
-input, button {
+.input-block label {
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.input-block input {
   padding: 10px;
-  border-radius: 8px;
+  font-size: 18px;
   border: none;
-  font-size: 16px;
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  color: #ffffff;
 }
 
-input {
-  background-color: #1e1e1e;
-  color: white;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
+#calculateBtn, #saveHistoryButton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #00e676;
+  color: #000;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #45a049;
+#calculateBtn:hover, #saveHistoryButton:hover {
+  background-color: #00c853;
 }
 
 #result {
   margin-top: 20px;
   padding: 15px;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-}
-
-#history {
-  margin-top: 30px;
-}
-
-.history-buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-#clearHistoryButton {
-  padding: 8px;
-  background-color: #e53935;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-#clearHistoryButton:hover {
-  background-color: #d32f2f;
-}
-
-#saveHistoryButton {
-  padding: 8px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-#saveHistoryButton:hover {
-  background-color: #1976D2;
+  background-color: #2c2c2c;
+  border-radius: 10px;
+  font-size: 18px;
 }
 
 #historyList {
-  list-style-type: none;
-  padding-left: 0;
+  margin-top: 10px;
+  padding-left: 20px;
 }
 
 #historyList li {
-  margin-bottom: 5px;
-  background-color: #1e1e1e;
-  padding: 8px;
-  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 16px;
 }
+
