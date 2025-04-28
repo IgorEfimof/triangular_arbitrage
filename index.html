@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Треугольный Арбитраж</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎾 Треугольный Арбитраж</h1>
+    <form id="arbitrageForm">
+      <label for="winnerOdds">Коэффициенты на победителя (через пробел):</label>
+      <input type="text" id="winnerOdds" required>
+
+      <label for="totalOdds">Коэффициенты на тотал (через пробел):</label>
+      <input type="text" id="totalOdds" required>
+
+      <label for="evenOddOdds">Коэффициенты на чет/нечет (через пробел):</label>
+      <input type="text" id="evenOddOdds" required>
+
+      <label for="bankroll">Банк для ставки (₽):</label>
+      <input type="number" id="bankroll" required>
+
+      <button type="submit">🔎 Найти Арбитраж</button>
+    </form>
+
+    <div id="result"></div>
+
+    <div id="history">
+      <h2>📝 История расчетов</h2>
+      <div class="history-buttons">
+        <button id="clearHistoryButton">🗑️ Очистить историю</button>
+        <button id="saveHistoryButton">💾 Сохранить историю</button>
+      </div>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
