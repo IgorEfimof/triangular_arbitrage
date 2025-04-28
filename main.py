@@ -1,18 +1,35 @@
 from utils.calculator import calculate_arbitrage
 from utils.checker import is_arbitrage
 
+def get_odds_from_input(prompt):
+    print(prompt)
+    odds = input("Введите коэффициенты через пробел: ")
+    return list(map(float, odds.strip().split()))
+
 def main():
-    print("Введите коэффициенты для треугольного арбитража:")
-    odd1 = float(input("Коэффициент на победителя: "))
-    odd2 = float(input("Коэффициент на тотал: "))
-    odd3 = float(input("Коэффициент на чет/нечет: "))
+    print("=== Треугольный Арбитраж Бот ===")
     
-    bankroll = float(input("Ваш банк (по умолчанию 100): ") or 100)
+    winner_odds = get_odds_from_input("Коэффициенты на победителя:")
+    total_odds = get_odds_from_input("Коэффициенты на тотал:")
+    even_odd_odds = get_odds_from_input("Коэффициенты на чет/нечет:")
     
-    if is_arbitrage(odd1, odd2, odd3):
-        calculate_arbitrage(odd1, odd2, odd3, bankroll)
-    else:
-        print("\n❌ Арбитражной ситуации нет.")
+    bankroll = float(input("Ваш банк (по умолчанию 100 ₽): ") or 100)
+    
+    found = False
+    print("\n🔎 Ищем треугольные арбитражи...\n")
+    
+    for win in winner_odds:
+        for total in total_odds:
+            for even_odd in even_odd_odds:
+                if is_arbitrage(win, total, even_odd):
+                    found = True
+                    print(f"\n--- Найден арбитраж! ---")
+                    print(f"Победитель: {win}, Тотал: {total}, Чет/Нечет: {even_odd}")
+                    calculate_arbitrage(win, total, even_odd, bankroll)
+    
+    if not found:
+        print("\n❌ Арбитражных ситуаций не найдено.")
 
 if __name__ == "__main__":
     main()
+
