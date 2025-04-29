@@ -1,63 +1,65 @@
-function calculateArbitrage() {
-  const coef1 = parseFloat(document.getElementById('coef1').value) || 0;
-  const coef2 = parseFloat(document.getElementById('coef2').value) || 0;
-  const coef3 = parseFloat(document.getElementById('coef3').value) || 0;
-  const coef4 = parseFloat(document.getElementById('coef4').value) || 0;
-  const coef5 = parseFloat(document.getElementById('coef5').value) || 0;
-  const coef6 = parseFloat(document.getElementById('coef6').value) || 0;
+document.getElementById("calculateBtn").addEventListener("click", () => {
+  const coefs = [];
+  for (let i = 1; i <= 14; i++) {
+    const val = parseFloat(document.getElementById("coef" + i).value);
+    coefs.push(isNaN(val) ? 0 : val);
+  }
 
-  const resultDiv = document.getElementById('result');
-  let resultText = '';
-
-  if (coef1 > 1 && coef2 > 1 && coef5 > 1) {
-    const arbitrageSum = (1/coef1) + (1/coef2) + (1/coef5);
-    resultText += `<p>Арбитраж (1,2,чет): ${(arbitrageSum * 100).toFixed(2)}%</p>`;
-    if (arbitrageSum < 1) {
-      resultText += `<p style="color: #00e676;">Есть возможность арбитража!</p>`;
-    } else {
-      resultText += `<p style="color: #ff1744;">Арбитраж невозможен.</p>`;
+  let message = "";
+  coefs.forEach((coef, index) => {
+    if (coef > 1) {
+      const requiredStake = 100 / coef;
+      const profit = 100 - requiredStake;
+      message += `Коэф. ${coef.toFixed(2)} → Вложить ${requiredStake.toFixed(2)} → Прибыль ${profit.toFixed(2)}\n`;
     }
-  } else {
-    resultText += `<p style="color: #ff1744;">Введите корректные коэффициенты для расчета.</p>`;
+  });
+
+  if (!message) {
+    message = "Введите коэффициенты больше 1.0";
   }
 
-  resultDiv.innerHTML = resultText;
+  document.getElementById("result").innerText = message;
+  saveToHistory(message);
+});
 
-  if (resultText.trim() !== '') {
-    const historyItem = document.createElement('li');
-    historyItem.innerHTML = resultDiv.innerHTML.replace(/<[^>]+>/g, '');
-    document.getElementById('historyList').appendChild(historyItem);
-  }
+function saveToHistory(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+  document.getElementById("historyList").prepend(li);
+  saveHistoryToStorage();
 }
 
-document.getElementById('calculateBtn').addEventListener('click', calculateArbitrage);
+function saveHistoryToStorage() {
+  const items = [...document.getElementById("historyList").children].map(li => li.textContent);
+  localStorage.setItem("arbitrageHistory", JSON.stringify(items));
+}
 
-document.getElementById('saveHistoryButton').addEventListener('click', function() {
-  const items = [];
-  document.querySelectorAll('#historyList li').forEach(li => items.push(li.textContent));
+function loadHistoryFromStorage() {
+  const items = JSON.parse(localStorage.getItem("arbitrageHistory") || "[]");
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+  items.forEach(text => {
+    const li = document.createElement("li");
+    li.textContent = text;
+    list.appendChild(li);
+  });
+}
 
-  if (items.length === 0) {
-    alert('История пуста, нечего сохранять!');
-    return;
-  }
-
-  const textContent = items.join('\n');
-  const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-
-  const date = new Date();
-  const filename = `arbitrage-history-${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}.txt`;
-
-  const link = document.createElement('a');
+document.getElementById("saveHistoryButton").addEventListener("click", () => {
+  const items = [...document.getElementById("historyList").children].map(li => li.textContent).join("\n\n");
+  const blob = new Blob([items], { type: "text/plain" });
+  const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  document.body.appendChild(link);
+  link.download = "arbitrage_history.txt";
   link.click();
-  document.body.removeChild(link);
 });
 
-document.getElementById('clearHistoryButton').addEventListener('click', function() {
-  const historyList = document.getElementById('historyList');
-  historyList.innerHTML = '';
+document.getElementById("clearHistoryButton").addEventListener("click", () => {
+  document.getElementById("historyList").innerHTML = "";
+  localStorage.removeItem("arbitrageHistory");
 });
+
+window.addEventListener("load", loadHistoryFromStorage);
+
 
 
