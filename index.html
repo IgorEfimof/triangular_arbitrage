@@ -1,74 +1,103 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Арбитражная форма</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .form-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .form-item span {
+            font-size: 14px;
+        }
+        .form-item strong {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Калькулятор Арбитража</h1>
-
-    <div class="arbitrage-table">
-      <div class="row">
-        <label>Победа 1</label>
-        <input type="number" id="coef1" step="0.01" placeholder="Коэф.">
-        <label>Победа 2</label>
-        <input type="number" id="coef2" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>Тотал Меньше</label>
-        <input type="number" id="coef3" step="0.01" placeholder="Коэф.">
-        <label>Тотал Больше</label>
-        <input type="number" id="coef4" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>Чет</label>
-        <input type="number" id="coef5" step="0.01" placeholder="Коэф.">
-        <label>Нечет</label>
-        <input type="number" id="coef6" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>1-й сет 1</label>
-        <input type="number" id="coef7" step="0.01" placeholder="Коэф.">
-        <label>1-й сет 2</label>
-        <input type="number" id="coef8" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>Фора 1</label>
-        <input type="number" id="coef9" step="0.01" placeholder="Коэф.">
-        <label>Фора 2</label>
-        <input type="number" id="coef10" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>2-й сет 1</label>
-        <input type="number" id="coef11" step="0.01" placeholder="Коэф.">
-        <label>2-й сет 2</label>
-        <input type="number" id="coef12" step="0.01" placeholder="Коэф.">
-      </div>
-      <div class="row">
-        <label>Тай-брейк</label>
-        <input type="number" id="coef13" step="0.01" placeholder="Коэф.">
-        <label>Без тай-брейка</label>
-        <input type="number" id="coef14" step="0.01" placeholder="Коэф.">
-      </div>
+    <div class="form-container">
+        <div class="form-item">
+            <span>1</span>
+            <strong>1.72</strong>
+        </div>
+        <div class="form-item">
+            <span>2</span>
+            <strong>2.00</strong>
+        </div>
+        <div class="form-item">
+            <span>ТМ (16.5)</span>
+            <strong>3.50</strong>
+        </div>
+        <div class="form-item">
+            <span>ТБ (16.5)</span>
+            <strong>1.26</strong>
+        </div>
+        <div class="form-item">
+            <span>ТМ (17.5)</span>
+            <strong>2.45</strong>
+        </div>
+        <div class="form-item">
+            <span>ТБ (17.5)</span>
+            <strong>1.49</strong>
+        </div>
+        <div class="form-item">
+            <span>ТМ (18.5)</span>
+            <strong>1.80</strong>
+        </div>
+        <div class="form-item">
+            <span>ТБ (18.5)</span>
+            <strong>1.90</strong>
+        </div>
+        <div class="form-item">
+            <span>ТМ (19.5)</span>
+            <strong>1.44</strong>
+        </div>
+        <div class="form-item">
+            <span>ТБ (19.5)</span>
+            <strong>2.60</strong>
+        </div>
+        <div class="form-item">
+            <span>ТМ (20.5)</span>
+            <strong>1.16</strong>
+        </div>
+        <div class="form-item">
+            <span>ТБ (20.5)</span>
+            <strong>4.50</strong>
+        </div>
+        <div class="form-item">
+            <span>Чет</span>
+            <strong>1.49</strong>
+        </div>
+        <div class="form-item">
+            <span>Нечет</span>
+            <strong>2.45</strong>
+        </div>
     </div>
-
-    <button id="calculateBtn">Рассчитать</button>
-
-    <div id="result"></div>
-
-    <h2>История расчетов</h2>
-    <ul id="historyList"></ul>
-
-    <div class="buttons">
-      <button id="saveHistoryButton">💾 Сохранить историю</button>
-      <button id="clearHistoryButton">🗑️ Очистить историю</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
 
