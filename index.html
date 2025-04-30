@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
@@ -27,6 +27,7 @@
             width: 90%;
             max-width: 600px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
         }
 
         .form-item {
@@ -51,11 +52,27 @@
             font-size: 14px;
             width: 60px;
             text-align: center;
+            transition: background-color 0.3s;
         }
 
         .form-item input:focus {
             outline: none;
             border-color: #666;
+        }
+
+        .bank-section, .results-section {
+            background-color: #1c1c1c;
+            color: #fff;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .results-section div {
+            margin-bottom: 8px;
         }
 
         @media (max-width: 480px) {
@@ -66,66 +83,103 @@
     </style>
 </head>
 <body>
+
+    <div class="bank-section">
+        <label for="bankAmount">Банк (₽):</label>
+        <input type="number" id="bankAmount" placeholder="Введите сумму банка" style="margin-left: 10px; width: 120px;">
+    </div>
+
     <form class="form-container">
-        <div class="form-item">
-            <label for="field1">1</label>
-            <input type="text" id="field1" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field2">2</label>
-            <input type="text" id="field2" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field3">ТМ (16.5)</label>
-            <input type="text" id="field3" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field4">ТБ (16.5)</label>
-            <input type="text" id="field4" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field5">ТМ (17.5)</label>
-            <input type="text" id="field5" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field6">ТБ (17.5)</label>
-            <input type="text" id="field6" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field7">ТМ (18.5)</label>
-            <input type="text" id="field7" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field8">ТБ (18.5)</label>
-            <input type="text" id="field8" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field9">ТМ (19.5)</label>
-            <input type="text" id="field9" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field10">ТБ (19.5)</label>
-            <input type="text" id="field10" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field11">ТМ (20.5)</label>
-            <input type="text" id="field11" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field12">ТБ (20.5)</label>
-            <input type="text" id="field12" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field13">Чет</label>
-            <input type="text" id="field13" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field14">Нечет</label>
-            <input type="text" id="field14" placeholder="">
-        </div>
+        <div class="form-item"><label for="field1">1</label><input type="text" id="field1"></div>
+        <div class="form-item"><label for="field2">2</label><input type="text" id="field2"></div>
+        <div class="form-item"><label for="field3">ТМ (16.5)</label><input type="text" id="field3"></div>
+        <div class="form-item"><label for="field4">ТБ (16.5)</label><input type="text" id="field4"></div>
+        <div class="form-item"><label for="field5">ТМ (17.5)</label><input type="text" id="field5"></div>
+        <div class="form-item"><label for="field6">ТБ (17.5)</label><input type="text" id="field6"></div>
+        <div class="form-item"><label for="field7">ТМ (18.5)</label><input type="text" id="field7"></div>
+        <div class="form-item"><label for="field8">ТБ (18.5)</label><input type="text" id="field8"></div>
+        <div class="form-item"><label for="field9">ТМ (19.5)</label><input type="text" id="field9"></div>
+        <div class="form-item"><label for="field10">ТБ (19.5)</label><input type="text" id="field10"></div>
+        <div class="form-item"><label for="field11">ТМ (20.5)</label><input type="text" id="field11"></div>
+        <div class="form-item"><label for="field12">ТБ (20.5)</label><input type="text" id="field12"></div>
+        <div class="form-item"><label for="field13">Чет</label><input type="text" id="field13"></div>
+        <div class="form-item"><label for="field14">Нечет</label><input type="text" id="field14"></div>
     </form>
+
+    <div class="results-section" id="results"></div>
+
+    <script>
+        function parseVal(id) {
+            const val = parseFloat(document.getElementById(id).value.replace(',', '.'));
+            return isNaN(val) ? null : val;
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('input').forEach(input => {
+                input.style.backgroundColor = '#222';
+            });
+        }
+
+        function showResults(fields, k1, k2, k3) {
+            const bank = parseVal('bankAmount');
+            if (!bank) return;
+
+            const sumInverse = (1 / k1) + (1 / k2) + (1 / k3);
+            const stake1 = (bank / k1) / sumInverse;
+            const stake2 = (bank / k2) / sumInverse;
+            const stake3 = (bank / k3) / sumInverse;
+            const profit = (bank / sumInverse - bank).toFixed(2);
+
+            const results = `
+                <div><strong>Вилка найдена!</strong></div>
+                <div>Ставка на ${fields[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
+                <div>Ставка на ${fields[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
+                <div>Ставка на ${fields[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
+                <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
+            `;
+            document.getElementById('results').innerHTML = results;
+
+            fields.forEach(id => {
+                document.getElementById(id).style.backgroundColor = '#14532d';
+            });
+        }
+
+        const arbitrageGroups = [
+            ['field1', 'field2', 'field13'],
+            ['field1', 'field2', 'field14'],
+            ['field3', 'field4', 'field13'],
+            ['field5', 'field6', 'field14'],
+            ['field7', 'field8', 'field13'],
+            ['field9', 'field10', 'field14'],
+            ['field11', 'field12', 'field13']
+        ];
+
+        function checkArbs() {
+            clearHighlights();
+            document.getElementById('results').innerHTML = '';
+
+            for (let group of arbitrageGroups) {
+                const [f1, f2, f3] = group;
+                const k1 = parseVal(f1);
+                const k2 = parseVal(f2);
+                const k3 = parseVal(f3);
+                if (k1 && k2 && k3) {
+                    const total = (1 / k1) + (1 / k2) + (1 / k3);
+                    if (total < 1) {
+                        showResults(group, k1, k2, k3);
+                        break; // показываем только одну вилку
+                    }
+                }
+            }
+        }
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', checkArbs);
+        });
+    </script>
 </body>
 </html>
+
 
 
 
