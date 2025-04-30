@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расчет вилки</title>
+    <title>Расчет арбитражной вилки</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,6 +69,7 @@
     <div class="form-container">
         <h1>Ввод коэффициентов и банка</h1>
         <form id="arbitrageForm">
+            <!-- Ввод коэффициентов -->
             <div class="form-item">
                 <label for="coef1">Коэффициент 1</label>
                 <input type="number" id="coef1" step="0.01" required>
@@ -81,6 +82,7 @@
                 <label for="coef3">Коэффициент 3</label>
                 <input type="number" id="coef3" step="0.01" required>
             </div>
+            <!-- Ввод банка -->
             <div class="form-item">
                 <label for="bank">Сумма банка</label>
                 <input type="number" id="bank" step="0.01" required>
