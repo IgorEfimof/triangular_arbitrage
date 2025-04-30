@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Коэффициенты</title>
+    <title>Форма коэффициентов</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +19,7 @@
 
         .form-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             background-color: #1c1c1c;
             padding: 20px;
@@ -31,15 +31,15 @@
 
         .form-item {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
             background-color: #333;
-            padding: 10px;
+            padding: 10px 15px;
             border-radius: 5px;
         }
 
         .form-item label {
             font-size: 14px;
-            margin-bottom: 8px;
         }
 
         .form-item input {
@@ -49,27 +49,13 @@
             border-radius: 5px;
             padding: 5px;
             font-size: 14px;
+            width: 60px;
+            text-align: center;
         }
 
         .form-item input:focus {
             outline: none;
             border-color: #666;
-        }
-
-        .submit-button {
-            grid-column: span 2;
-            background-color: #444;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .submit-button:hover {
-            background-color: #555;
         }
 
         @media (max-width: 480px) {
@@ -83,53 +69,60 @@
     <form class="form-container">
         <div class="form-item">
             <label for="field1">1</label>
-            <input type="text" id="field1" placeholder="Введите коэффициент">
+            <input type="text" id="field1" placeholder="1.72">
         </div>
         <div class="form-item">
             <label for="field2">2</label>
-            <input type="text" id="field2" placeholder="Введите коэффициент">
+            <input type="text" id="field2" placeholder="2.00">
         </div>
         <div class="form-item">
             <label for="field3">ТМ (16.5)</label>
-            <input type="text" id="field3" placeholder="Введите коэффициент">
+            <input type="text" id="field3" placeholder="3.50">
         </div>
         <div class="form-item">
             <label for="field4">ТБ (16.5)</label>
-            <input type="text" id="field4" placeholder="Введите коэффициент">
+            <input type="text" id="field4" placeholder="1.26">
         </div>
         <div class="form-item">
             <label for="field5">ТМ (17.5)</label>
-            <input type="text" id="field5" placeholder="Введите коэффициент">
+            <input type="text" id="field5" placeholder="2.45">
         </div>
         <div class="form-item">
             <label for="field6">ТБ (17.5)</label>
-            <input type="text" id="field6" placeholder="Введите коэффициент">
+            <input type="text" id="field6" placeholder="1.49">
         </div>
         <div class="form-item">
             <label for="field7">ТМ (18.5)</label>
-            <input type="text" id="field7" placeholder="Введите коэффициент">
+            <input type="text" id="field7" placeholder="1.80">
         </div>
         <div class="form-item">
             <label for="field8">ТБ (18.5)</label>
-            <input type="text" id="field8" placeholder="Введите коэффициент">
+            <input type="text" id="field8" placeholder="1.90">
         </div>
         <div class="form-item">
             <label for="field9">ТМ (19.5)</label>
-            <input type="text" id="field9" placeholder="Введите коэффициент">
+            <input type="text" id="field9" placeholder="1.44">
         </div>
         <div class="form-item">
             <label for="field10">ТБ (19.5)</label>
-            <input type="text" id="field10" placeholder="Введите коэффициент">
+            <input type="text" id="field10" placeholder="2.60">
         </div>
         <div class="form-item">
-            <label for="field11">Чет</label>
-            <input type="text" id="field11" placeholder="Введите коэффициент">
+            <label for="field11">ТМ (20.5)</label>
+            <input type="text" id="field11" placeholder="1.16">
         </div>
         <div class="form-item">
-            <label for="field12">Нечет</label>
-            <input type="text" id="field12" placeholder="Введите коэффициент">
+            <label for="field12">ТБ (20.5)</label>
+            <input type="text" id="field12" placeholder="4.50">
         </div>
-        <button type="submit" class="submit-button">Сохранить</button>
+        <div class="form-item">
+            <label for="field13">Чет</label>
+            <input type="text" id="field13" placeholder="1.49">
+        </div>
+        <div class="form-item">
+            <label for="field14">Нечет</label>
+            <input type="text" id="field14" placeholder="2.45">
+        </div>
     </form>
 </body>
 </html>
