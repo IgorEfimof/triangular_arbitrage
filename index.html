@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма коэффициентов</title>
+    <title>Расчет вилки</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,118 +12,122 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
         }
-
-        .form-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+        .form-container, .result-container {
             background-color: #1c1c1c;
             padding: 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             width: 90%;
             max-width: 600px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
-
-        .form-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #333;
-            padding: 10px 15px;
-            border-radius: 5px;
-        }
-
-        .form-item label {
-            font-size: 14px;
-        }
-
-        .form-item input {
-            background-color: #222;
+        .form-container h1, .result-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
             color: #fff;
+        }
+        .form-item {
+            margin-bottom: 15px;
+        }
+        .form-item label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-item input {
+            width: 100%;
+            padding: 10px;
             border: 1px solid #444;
             border-radius: 5px;
-            padding: 5px;
-            font-size: 14px;
-            width: 60px;
-            text-align: center;
+            background-color: #222;
+            color: #fff;
         }
-
-        .form-item input:focus {
-            outline: none;
-            border-color: #666;
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-
-        @media (max-width: 480px) {
-            .form-container {
-                grid-template-columns: 1fr;
-            }
+        .submit-button:hover {
+            background-color: #555;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <form class="form-container">
-        <div class="form-item">
-            <label for="field1">1</label>
-            <input type="text" id="field1" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field2">2</label>
-            <input type="text" id="field2" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field3">ТМ (16.5)</label>
-            <input type="text" id="field3" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field4">ТБ (16.5)</label>
-            <input type="text" id="field4" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field5">ТМ (17.5)</label>
-            <input type="text" id="field5" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field6">ТБ (17.5)</label>
-            <input type="text" id="field6" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field7">ТМ (18.5)</label>
-            <input type="text" id="field7" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field8">ТБ (18.5)</label>
-            <input type="text" id="field8" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field9">ТМ (19.5)</label>
-            <input type="text" id="field9" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field10">ТБ (19.5)</label>
-            <input type="text" id="field10" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field11">ТМ (20.5)</label>
-            <input type="text" id="field11" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field12">ТБ (20.5)</label>
-            <input type="text" id="field12" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field13">Чет</label>
-            <input type="text" id="field13" placeholder="">
-        </div>
-        <div class="form-item">
-            <label for="field14">Нечет</label>
-            <input type="text" id="field14" placeholder="">
-        </div>
-    </form>
+    <div class="form-container">
+        <h1>Ввод коэффициентов и банка</h1>
+        <form id="arbitrageForm">
+            <div class="form-item">
+                <label for="coef1">Коэффициент 1</label>
+                <input type="number" id="coef1" step="0.01" required>
+            </div>
+            <div class="form-item">
+                <label for="coef2">Коэффициент 2</label>
+                <input type="number" id="coef2" step="0.01" required>
+            </div>
+            <div class="form-item">
+                <label for="coef3">Коэффициент 3</label>
+                <input type="number" id="coef3" step="0.01" required>
+            </div>
+            <div class="form-item">
+                <label for="bank">Сумма банка</label>
+                <input type="number" id="bank" step="0.01" required>
+            </div>
+            <button type="submit" class="submit-button">Рассчитать вилку</button>
+        </form>
+    </div>
+
+    <div class="result-container" id="resultContainer" style="display: none;">
+        <h2>Результаты расчета</h2>
+        <div class="result-item" id="arbitrageResult"></div>
+        <div class="result-item" id="stakeDistribution"></div>
+    </div>
+
+    <script>
+        document.getElementById('arbitrageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Получаем коэффициенты и банк
+            const coef1 = parseFloat(document.getElementById('coef1').value);
+            const coef2 = parseFloat(document.getElementById('coef2').value);
+            const coef3 = parseFloat(document.getElementById('coef3').value);
+            const bank = parseFloat(document.getElementById('bank').value);
+
+            const coefs = [coef1, coef2, coef3];
+
+            // Проверяем наличие вилки
+            const inverseSum = coefs.reduce((sum, coef) => sum + 1 / coef, 0);
+            const resultContainer = document.getElementById('resultContainer');
+            const arbitrageResult = document.getElementById('arbitrageResult');
+            const stakeDistribution = document.getElementById('stakeDistribution');
+
+            if (inverseSum < 1) {
+                // Расчет вилки
+                const bets = coefs.map(coef => (1 / coef / inverseSum * bank).toFixed(2));
+                const profit = ((bank / inverseSum) - bank).toFixed(2);
+
+                arbitrageResult.textContent = `Вилка найдена! Гарантированная прибыль: ${profit} единиц.`;
+                stakeDistribution.textContent = `Распределение ставок: Ставка 1: ${bets[0]} | Ставка 2: ${bets[1]} | Ставка 3: ${bets[2]}`;
+            } else {
+                arbitrageResult.textContent = 'Вилки нет. Коэффициенты не подходят.';
+                stakeDistribution.textContent = '';
+            }
+
+            resultContainer.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
 
