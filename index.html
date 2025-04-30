@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расчет арбитражной вилки</title>
+    <title>Расчет вилки</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
             justify-content: center;
             min-height: 100vh;
         }
-        .form-container, .result-container {
+        .form-container {
             background-color: #1c1c1c;
             padding: 20px;
             border-radius: 10px;
@@ -26,25 +26,29 @@
             max-width: 600px;
             margin-bottom: 20px;
         }
-        .form-container h1, .result-container h2 {
+        .form-container h1 {
             text-align: center;
             margin-bottom: 20px;
             color: #fff;
         }
         .form-item {
-            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
         .form-item label {
-            display: block;
-            margin-bottom: 5px;
+            font-size: 14px;
         }
         .form-item input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 5px;
             background-color: #222;
             color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 14px;
+            width: 60px;
+            text-align: center;
         }
         .submit-button {
             width: 100%;
@@ -59,17 +63,30 @@
         .submit-button:hover {
             background-color: #555;
         }
-        .result-item {
-            margin-bottom: 10px;
+        .result-container {
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+        }
+        .result-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .result-text {
+            text-align: center;
             font-size: 16px;
+            color: #fff;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>Ввод коэффициентов и банка</h1>
+        <h1>Ввод коэффициентов</h1>
         <form id="arbitrageForm">
-            <!-- Ввод коэффициентов -->
             <div class="form-item">
                 <label for="coef1">Коэффициент 1</label>
                 <input type="number" id="coef1" step="0.01" required>
@@ -82,49 +99,37 @@
                 <label for="coef3">Коэффициент 3</label>
                 <input type="number" id="coef3" step="0.01" required>
             </div>
-            <!-- Ввод банка -->
-            <div class="form-item">
-                <label for="bank">Сумма банка</label>
-                <input type="number" id="bank" step="0.01" required>
-            </div>
-            <button type="submit" class="submit-button">Рассчитать вилку</button>
+            <button type="submit" class="submit-button">Рассчитать</button>
         </form>
     </div>
 
     <div class="result-container" id="resultContainer" style="display: none;">
         <h2>Результаты расчета</h2>
-        <div class="result-item" id="arbitrageResult"></div>
-        <div class="result-item" id="stakeDistribution"></div>
+        <p class="result-text" id="resultText"></p>
     </div>
 
     <script>
         document.getElementById('arbitrageForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Получаем коэффициенты и банк
+            // Получаем коэффициенты
             const coef1 = parseFloat(document.getElementById('coef1').value);
             const coef2 = parseFloat(document.getElementById('coef2').value);
             const coef3 = parseFloat(document.getElementById('coef3').value);
-            const bank = parseFloat(document.getElementById('bank').value);
 
             const coefs = [coef1, coef2, coef3];
 
             // Проверяем наличие вилки
             const inverseSum = coefs.reduce((sum, coef) => sum + 1 / coef, 0);
             const resultContainer = document.getElementById('resultContainer');
-            const arbitrageResult = document.getElementById('arbitrageResult');
-            const stakeDistribution = document.getElementById('stakeDistribution');
+            const resultText = document.getElementById('resultText');
 
             if (inverseSum < 1) {
                 // Расчет вилки
-                const bets = coefs.map(coef => (1 / coef / inverseSum * bank).toFixed(2));
-                const profit = ((bank / inverseSum) - bank).toFixed(2);
-
-                arbitrageResult.textContent = `Вилка найдена! Гарантированная прибыль: ${profit} единиц.`;
-                stakeDistribution.textContent = `Распределение ставок: Ставка 1: ${bets[0]} | Ставка 2: ${bets[1]} | Ставка 3: ${bets[2]}`;
+                const bets = coefs.map(coef => (1 / coef / inverseSum).toFixed(2));
+                resultText.textContent = `Вилка найдена! Распределение ставок: ${bets.join(', ')}`;
             } else {
-                arbitrageResult.textContent = 'Вилки нет. Коэффициенты не подходят.';
-                stakeDistribution.textContent = '';
+                resultText.textContent = 'Вилки нет. Коэффициенты не подходят.';
             }
 
             resultContainer.style.display = 'block';
