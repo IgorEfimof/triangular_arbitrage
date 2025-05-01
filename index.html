@@ -211,6 +211,29 @@
             document.getElementById('results').innerHTML = '<div>Вилка не найдена.</div>';
         }
 
+        function autoFormatAndMove(event) {
+            const input = event.target;
+            const value = input.value;
+
+            // Если введена первая цифра, добавляем точку
+            if (value.length === 1 && !value.includes('.')) {
+                input.value = value + '.';
+            }
+
+            // Если введено 3 символа, переходим к следующему полю
+            if (value.length === 4) {
+                const formElements = Array.from(document.querySelectorAll('.form-container input'));
+                const currentIndex = formElements.indexOf(input);
+                if (currentIndex !== -1 && currentIndex < formElements.length - 1) {
+                    formElements[currentIndex + 1].focus();
+                }
+            }
+        }
+
+        document.querySelectorAll('.form-container input').forEach(input => {
+            input.addEventListener('input', autoFormatAndMove);
+        });
+
         document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
         document.getElementById('clearButton').addEventListener('click', clearForm);
     </script>
