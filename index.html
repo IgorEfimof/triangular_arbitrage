@@ -5,15 +5,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Арбитражная вилка</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container,
+        .results-section,
+        .bank-section {
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .form-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .form-item label {
+            font-size: 14px;
+        }
+
+        .form-item input {
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 14px;
+            width: 60px;
+            text-align: center;
+        }
+
+        .results-section div {
+            margin-bottom: 8px;
+        }
+
+        .bank-section label {
+            font-size: 16px;
+        }
+
+        .bank-section input {
+            margin-left: 10px;
+            width: 120px;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #555;
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- Блок ввода банка -->
     <div class="bank-section">
         <label for="bankAmount">Банк (₽):</label>
         <input type="number" id="bankAmount" placeholder="Введите сумму банка">
     </div>
 
+    <!-- Форма для ввода коэффициентов -->
     <form class="form-container">
         <div class="form-item"><label for="field1">1</label><input type="text" id="field1"></div>
         <div class="form-item"><label for="field2">2</label><input type="text" id="field2"></div>
@@ -31,14 +133,90 @@
         <div class="form-item"><label for="field14">Нечет</label><input type="text" id="field14"></div>
     </form>
 
+    <!-- Блок для вывода результата -->
     <div class="results-section" id="results"></div>
 
+    <!-- Кнопки управления -->
     <div class="button-container">
         <button id="calculateButton">Рассчитать</button>
         <button id="clearButton">Очистить форму</button>
     </div>
 
-    <script src="ai-arbitrage.js"></script>
+    <script>
+        function parseVal(id) {
+            const val = parseFloat(document.getElementById(id).value.replace(',', '.'));
+            return isNaN(val) ? null : val;
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('input').forEach(input => {
+                input.style.backgroundColor = '#222';
+            });
+        }
+
+        function clearForm() {
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = '#222';
+            });
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function showResults(fields, k1, k2, k3) {
+            const bank = parseVal('bankAmount');
+            if (!bank) {
+                alert('Введите сумму банка!');
+                return;
+            }
+
+            const sumInverse = (1 / k1) + (1 / k2) + (1 / k3);
+            const stake1 = (bank / k1) / sumInverse;
+            const stake2 = (bank / k2) / sumInverse;
+            const stake3 = (bank / k3) / sumInverse;
+            const profit = (bank / sumInverse - bank).toFixed(2);
+
+            const results = `
+                <div><strong>Вилка найдена!</strong></div>
+                <div>Ставка на ${fields[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
+                <div>Ставка на ${fields[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
+                <div>Ставка на ${fields[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
+                <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
+            `;
+            document.getElementById('results').innerHTML = results;
+
+            fields.forEach(id => {
+                document.getElementById(id).style.backgroundColor = '#14532d';
+            });
+        }
+
+        const arbitrageGroups = [
+            ['field1', 'field2', 'field13'],
+            ['field3', 'field4', 'field14'],
+            ['field5', 'field6', 'field7'],
+        ];
+
+        function checkArbs() {
+            clearHighlights();
+            document.getElementById('results').innerHTML = '';
+
+            for (let group of arbitrageGroups) {
+                const [f1, f2, f3] = group;
+                const k1 = parseVal(f1);
+                const k2 = parseVal(f2);
+                const k3 = parseVal(f3);
+                if (k1 && k2 && k3) {
+                    const total = (1 / k1) + (1 / k2) + (1 / k3);
+                    if (total < 1) {
+                        showResults(group, k1, k2, k3);
+                        break;
+                    }
+                }
+            }
+        }
+
+        document.getElementById('calculateButton').addEventListener('click', checkArbs);
+        document.getElementById('clearButton').addEventListener('click', clearForm);
+    </script>
 </body>
 
 </html>
