@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -135,8 +134,8 @@
     <div class="results-section" id="results"></div>
 
     <div class="button-container">
-        <button id="calculateButton">Рассчитать</button>
-        <button id="clearButton">Очистить форму</button>
+        <button type="button" id="calculateButton">Рассчитать</button>
+        <button type="button" id="clearButton">Очистить форму</button>
     </div>
 
     <script>
@@ -159,23 +158,37 @@
             document.getElementById('results').innerHTML = '';
         }
 
-        function calculateArbitrage(group, bank) {
-            const [f1, f2, f3] = group;
-            const k1 = parseVal(f1);
-            const k2 = parseVal(f2);
-            const k3 = parseVal(f3);
+        function calculateArbitrage(bank, coefficients) {
+            let bestArbitrage = null;
 
-            if (!k1 || !k2 || !k3) return null;
+            for (let i = 0; i < coefficients.length; i++) {
+                for (let j = i + 1; j < coefficients.length; j++) {
+                    for (let k = j + 1; k < coefficients.length; k++) {
+                        const [field1, k1] = coefficients[i];
+                        const [field2, k2] = coefficients[j];
+                        const [field3, k3] = coefficients[k];
 
-            const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
-            if (totalInverse >= 1) return null;
+                        const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
 
-            const stake1 = (bank / k1) / totalInverse;
-            const stake2 = (bank / k2) / totalInverse;
-            const stake3 = (bank / k3) / totalInverse;
-            const profit = (bank / totalInverse - bank).toFixed(2);
+                        if (totalInverse < 1) {
+                            const stake1 = (bank / k1) / totalInverse;
+                            const stake2 = (bank / k2) / totalInverse;
+                            const stake3 = (bank / k3) / totalInverse;
+                            const profit = (bank / totalInverse - bank).toFixed(2);
 
-            return { stake1, stake2, stake3, profit };
+                            if (!bestArbitrage || profit > bestArbitrage.profit) {
+                                bestArbitrage = {
+                                    fields: [field1, field2, field3],
+                                    stakes: [stake1, stake2, stake3],
+                                    profit: profit,
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+
+            return bestArbitrage;
         }
 
         function checkArbitrage() {
@@ -186,41 +199,43 @@
                 return;
             }
 
-            const arbitrageGroups = [
-                ['field1', 'field2', 'field13'],
-                ['field3', 'field4', 'field14'],
-                ['field5', 'field6', 'field7'],
-            ];
-
-            for (let group of arbitrageGroups) {
-                const result = calculateArbitrage(group, bank);
-                if (result) {
-                    const { stake1, stake2, stake3, profit } = result;
-                    document.getElementById('results').innerHTML = `
-                        <div><strong>Вилка найдена!</strong></div>
-                        <div>Ставка на ${group[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
-                        <div>Ставка на ${group[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
-                        <div>Ставка на ${group[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
-                        <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
-                    `;
-                    group.forEach(id => document.getElementById(id).style.backgroundColor = '#14532d');
-                    return;
-                }
+            const coefficients = [];
+            for (let i = 1; i <= 14; i++) {
+                const field = `field${i}`;
+                const value = parseVal(field);
+                if (value) coefficients.push([field, value]);
             }
 
-            document.getElementById('results').innerHTML = '<div>Вилка не найдена.</div>';
+            const bestArbitrage = calculateArbitrage(bank, coefficients);
+            const results = document.getElementById('results');
+
+            if (bestArbitrage) {
+                const { fields, stakes, profit } = bestArbitrage;
+
+                results.innerHTML = `
+                    <div><strong>Вилка найдена!</strong></div>
+                    <div>Ставка на ${fields[0]}: <b>${stakes[0].toFixed(2)} ₽</b></div>
+                    <div>Ставка на ${fields[1]}: <b>${stakes[1].toFixed(2)} ₽</b></div>
+                    <div>Ставка на ${fields[2]}: <b>${stakes[2].toFixed(2)} ₽</b></div>
+                    <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
+                `;
+
+                fields.forEach(field => {
+                    document.getElementById(field).style.backgroundColor = '#14532d';
+                });
+            } else {
+                results.innerHTML = '<div>Вилка не найдена.</div>';
+            }
         }
 
         function autoFormatAndMove(event) {
             const input = event.target;
             const value = input.value;
 
-            // Если введена первая цифра, добавляем точку
             if (value.length === 1 && !value.includes('.')) {
                 input.value = value + '.';
             }
 
-            // Если введено 3 символа, переходим к следующему полю
             if (value.length === 4) {
                 const formElements = Array.from(document.querySelectorAll('.form-container input'));
                 const currentIndex = formElements.indexOf(input);
@@ -237,9 +252,10 @@
         document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
         document.getElementById('clearButton').addEventListener('click', clearForm);
     </script>
-</body>
 
+</body>
 </html>
+
 
 
 
