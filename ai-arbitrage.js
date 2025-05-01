@@ -17,57 +17,78 @@ function clearForm() {
     document.getElementById('results').innerHTML = '';
 }
 
-function showResults(fields, k1, k2, k3) {
+function calculateArbitrage(bank, coefficients) {
+    let bestArbitrage = null;
+
+    // Перебираем все комбинации коэффициентов
+    for (let i = 0; i < coefficients.length; i++) {
+        for (let j = i + 1; j < coefficients.length; j++) {
+            for (let k = j + 1; k < coefficients.length; k++) {
+                const [field1, k1] = coefficients[i];
+                const [field2, k2] = coefficients[j];
+                const [field3, k3] = coefficients[k];
+
+                const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
+
+                if (totalInverse < 1) {
+                    const stake1 = (bank / k1) / totalInverse;
+                    const stake2 = (bank / k2) / totalInverse;
+                    const stake3 = (bank / k3) / totalInverse;
+                    const profit = (bank / totalInverse - bank).toFixed(2);
+
+                    if (!bestArbitrage || profit > bestArbitrage.profit) {
+                        bestArbitrage = {
+                            fields: [field1, field2, field3],
+                            stakes: [stake1, stake2, stake3],
+                            profit: profit,
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    return bestArbitrage;
+}
+
+function checkArbitrage() {
+    clearHighlights();
     const bank = parseVal('bankAmount');
     if (!bank) {
         alert('Введите сумму банка!');
         return;
     }
 
-    const sumInverse = (1 / k1) + (1 / k2) + (1 / k3);
-    const stake1 = (bank / k1) / sumInverse;
-    const stake2 = (bank / k2) / sumInverse;
-    const stake3 = (bank / k3) / sumInverse;
-    const profit = (bank / sumInverse - bank).toFixed(2);
+    // Собираем коэффициенты из формы
+    const coefficients = [];
+    for (let i = 1; i <= 14; i++) {
+        const field = `field${i}`;
+        const value = parseVal(field);
+        if (value) coefficients.push([field, value]);
+    }
 
-    const results = `
-        <div><strong>Вилка найдена!</strong></div>
-        <div>Ставка на ${fields[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
-        <div>Ставка на ${fields[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
-        <div>Ставка на ${fields[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
-        <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
-    `;
-    document.getElementById('results').innerHTML = results;
+    // Ищем лучшую вилку
+    const bestArbitrage = calculateArbitrage(bank, coefficients);
 
-    fields.forEach(id => {
-        document.getElementById(id).style.backgroundColor = '#14532d';
-    });
-}
+    const results = document.getElementById('results');
+    if (bestArbitrage) {
+        const { fields, stakes, profit } = bestArbitrage;
 
-const arbitrageGroups = [
-    ['field1', 'field2', 'field13'], // Победа и чет
-    ['field3', 'field4', 'field13'], // Тотал меньше и чет
-    ['field5', 'field6', 'field14']  // Тотал больше и нечет
-];
+        results.innerHTML = `
+            <div><strong>Вилка найдена!</strong></div>
+            <div>Ставка на ${fields[0]}: <b>${stakes[0].toFixed(2)} ₽</b></div>
+            <div>Ставка на ${fields[1]}: <b>${stakes[1].toFixed(2)} ₽</b></div>
+            <div>Ставка на ${fields[2]}: <b>${stakes[2].toFixed(2)} ₽</b></div>
+            <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
+        `;
 
-function checkArbs() {
-    clearHighlights();
-    document.getElementById('results').innerHTML = '';
-
-    for (let group of arbitrageGroups) {
-        const [f1, f2, f3] = group;
-        const k1 = parseVal(f1);
-        const k2 = parseVal(f2);
-        const k3 = parseVal(f3);
-        if (k1 && k2 && k3) {
-            const total = (1 / k1) + (1 / k2) + (1 / k3);
-            if (total < 1) {
-                showResults(group, k1, k2, k3);
-                break;
-            }
-        }
+        fields.forEach(field => {
+            document.getElementById(field).style.backgroundColor = '#14532d';
+        });
+    } else {
+        results.innerHTML = '<div>Вилка не найдена.</div>';
     }
 }
 
-document.getElementById('calculateButton').addEventListener('click', checkArbs);
+document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
 document.getElementById('clearButton').addEventListener('click', clearForm);
