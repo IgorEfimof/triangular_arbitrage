@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма коэффициентов</title>
+    <title>Арбитражная вилка</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,17 +17,20 @@
             min-height: 100vh;
         }
 
+        .form-container, .results-section {
+            background-color: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
         .form-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            background-color: #1c1c1c;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            margin-top: 20px;
         }
 
         .form-item {
@@ -52,27 +55,34 @@
             font-size: 14px;
             width: 60px;
             text-align: center;
-            transition: background-color 0.3s;
-        }
-
-        .form-item input:focus {
-            outline: none;
-            border-color: #666;
-        }
-
-        .bank-section, .results-section {
-            background-color: #1c1c1c;
-            color: #fff;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
         }
 
         .results-section div {
             margin-bottom: 8px;
+        }
+
+        .bank-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #1c1c1c;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .bank-section label {
+            font-size: 16px;
+        }
+
+        .bank-section input {
+            margin-left: 10px;
+            width: 120px;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #444;
         }
 
         @media (max-width: 480px) {
@@ -84,11 +94,13 @@
 </head>
 <body>
 
+    <!-- Блок ввода банка -->
     <div class="bank-section">
         <label for="bankAmount">Банк (₽):</label>
-        <input type="number" id="bankAmount" placeholder="Введите сумму банка" style="margin-left: 10px; width: 120px;">
+        <input type="number" id="bankAmount" placeholder="Введите сумму банка">
     </div>
 
+    <!-- Форма для ввода коэффициентов -->
     <form class="form-container">
         <div class="form-item"><label for="field1">1</label><input type="text" id="field1"></div>
         <div class="form-item"><label for="field2">2</label><input type="text" id="field2"></div>
@@ -106,6 +118,7 @@
         <div class="form-item"><label for="field14">Нечет</label><input type="text" id="field14"></div>
     </form>
 
+    <!-- Блок для вывода результата -->
     <div class="results-section" id="results"></div>
 
     <script>
@@ -146,12 +159,8 @@
 
         const arbitrageGroups = [
             ['field1', 'field2', 'field13'],
-            ['field1', 'field2', 'field14'],
-            ['field3', 'field4', 'field13'],
-            ['field5', 'field6', 'field14'],
-            ['field7', 'field8', 'field13'],
-            ['field9', 'field10', 'field14'],
-            ['field11', 'field12', 'field13']
+            ['field3', 'field4', 'field14'],
+            ['field5', 'field6', 'field7'],
         ];
 
         function checkArbs() {
@@ -167,7 +176,7 @@
                     const total = (1 / k1) + (1 / k2) + (1 / k3);
                     if (total < 1) {
                         showResults(group, k1, k2, k3);
-                        break; // показываем только одну вилку
+                        break;  
                     }
                 }
             }
