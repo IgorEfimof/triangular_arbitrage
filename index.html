@@ -109,7 +109,6 @@
 
 <body>
 
-    <!-- Блок ввода банка -->
     <div class="bank-section">
         <label for="bankAmount">Банк (₽):</label>
         <input type="number" id="bankAmount" placeholder="Введите сумму банка">
@@ -133,10 +132,8 @@
         <div class="form-item"><label for="field14">Нечет</label><input type="text" id="field14"></div>
     </form>
 
-    <!-- Блок для вывода результата -->
     <div class="results-section" id="results"></div>
 
-    <!-- Кнопки управления -->
     <div class="button-container">
         <button id="calculateButton">Рассчитать</button>
         <button id="clearButton">Очистить форму</button>
@@ -162,59 +159,59 @@
             document.getElementById('results').innerHTML = '';
         }
 
-        function showResults(fields, k1, k2, k3) {
+        function calculateArbitrage(group, bank) {
+            const [f1, f2, f3] = group;
+            const k1 = parseVal(f1);
+            const k2 = parseVal(f2);
+            const k3 = parseVal(f3);
+
+            if (!k1 || !k2 || !k3) return null;
+
+            const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
+            if (totalInverse >= 1) return null;
+
+            const stake1 = (bank / k1) / totalInverse;
+            const stake2 = (bank / k2) / totalInverse;
+            const stake3 = (bank / k3) / totalInverse;
+            const profit = (bank / totalInverse - bank).toFixed(2);
+
+            return { stake1, stake2, stake3, profit };
+        }
+
+        function checkArbitrage() {
+            clearHighlights();
             const bank = parseVal('bankAmount');
             if (!bank) {
                 alert('Введите сумму банка!');
                 return;
             }
 
-            const sumInverse = (1 / k1) + (1 / k2) + (1 / k3);
-            const stake1 = (bank / k1) / sumInverse;
-            const stake2 = (bank / k2) / sumInverse;
-            const stake3 = (bank / k3) / sumInverse;
-            const profit = (bank / sumInverse - bank).toFixed(2);
-
-            const results = `
-                <div><strong>Вилка найдена!</strong></div>
-                <div>Ставка на ${fields[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
-                <div>Ставка на ${fields[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
-                <div>Ставка на ${fields[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
-                <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
-            `;
-            document.getElementById('results').innerHTML = results;
-
-            fields.forEach(id => {
-                document.getElementById(id).style.backgroundColor = '#14532d';
-            });
-        }
-
-        const arbitrageGroups = [
-            ['field1', 'field2', 'field13'],
-            ['field3', 'field4', 'field14'],
-            ['field5', 'field6', 'field7'],
-        ];
-
-        function checkArbs() {
-            clearHighlights();
-            document.getElementById('results').innerHTML = '';
+            const arbitrageGroups = [
+                ['field1', 'field2', 'field13'],
+                ['field3', 'field4', 'field14'],
+                ['field5', 'field6', 'field7'],
+            ];
 
             for (let group of arbitrageGroups) {
-                const [f1, f2, f3] = group;
-                const k1 = parseVal(f1);
-                const k2 = parseVal(f2);
-                const k3 = parseVal(f3);
-                if (k1 && k2 && k3) {
-                    const total = (1 / k1) + (1 / k2) + (1 / k3);
-                    if (total < 1) {
-                        showResults(group, k1, k2, k3);
-                        break;
-                    }
+                const result = calculateArbitrage(group, bank);
+                if (result) {
+                    const { stake1, stake2, stake3, profit } = result;
+                    document.getElementById('results').innerHTML = `
+                        <div><strong>Вилка найдена!</strong></div>
+                        <div>Ставка на ${group[0]}: <b>${stake1.toFixed(2)} ₽</b></div>
+                        <div>Ставка на ${group[1]}: <b>${stake2.toFixed(2)} ₽</b></div>
+                        <div>Ставка на ${group[2]}: <b>${stake3.toFixed(2)} ₽</b></div>
+                        <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
+                    `;
+                    group.forEach(id => document.getElementById(id).style.backgroundColor = '#14532d');
+                    return;
                 }
             }
+
+            document.getElementById('results').innerHTML = '<div>Вилка не найдена.</div>';
         }
 
-        document.getElementById('calculateButton').addEventListener('click', checkArbs);
+        document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
         document.getElementById('clearButton').addEventListener('click', clearForm);
     </script>
 </body>
