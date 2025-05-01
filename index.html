@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,9 @@
             min-height: 100vh;
         }
 
-        .form-container, .results-section {
+        .form-container,
+        .results-section,
+        .bank-section {
             background-color: #1c1c1c;
             padding: 20px;
             border-radius: 10px;
@@ -38,7 +41,7 @@
             justify-content: space-between;
             align-items: center;
             background-color: #333;
-            padding: 10px 15px;
+            padding: 10px;
             border-radius: 5px;
         }
 
@@ -61,16 +64,6 @@
             margin-bottom: 8px;
         }
 
-        .bank-section {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #1c1c1c;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
         .bank-section label {
             font-size: 16px;
         }
@@ -85,6 +78,27 @@
             border: 1px solid #444;
         }
 
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #555;
+        }
+
         @media (max-width: 480px) {
             .form-container {
                 grid-template-columns: 1fr;
@@ -92,6 +106,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Блок ввода банка -->
@@ -121,6 +136,12 @@
     <!-- Блок для вывода результата -->
     <div class="results-section" id="results"></div>
 
+    <!-- Кнопки управления -->
+    <div class="button-container">
+        <button id="calculateButton">Рассчитать</button>
+        <button id="clearButton">Очистить форму</button>
+    </div>
+
     <script>
         function parseVal(id) {
             const val = parseFloat(document.getElementById(id).value.replace(',', '.'));
@@ -133,9 +154,20 @@
             });
         }
 
+        function clearForm() {
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = '#222';
+            });
+            document.getElementById('results').innerHTML = '';
+        }
+
         function showResults(fields, k1, k2, k3) {
             const bank = parseVal('bankAmount');
-            if (!bank) return;
+            if (!bank) {
+                alert('Введите сумму банка!');
+                return;
+            }
 
             const sumInverse = (1 / k1) + (1 / k2) + (1 / k3);
             const stake1 = (bank / k1) / sumInverse;
@@ -176,17 +208,17 @@
                     const total = (1 / k1) + (1 / k2) + (1 / k3);
                     if (total < 1) {
                         showResults(group, k1, k2, k3);
-                        break;  
+                        break;
                     }
                 }
             }
         }
 
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', checkArbs);
-        });
+        document.getElementById('calculateButton').addEventListener('click', checkArbs);
+        document.getElementById('clearButton').addEventListener('click', clearForm);
     </script>
 </body>
+
 </html>
 
 
