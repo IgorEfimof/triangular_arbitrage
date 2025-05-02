@@ -42,7 +42,7 @@
             background-color: #333;
             padding: 10px;
             border-radius: 5px;
-            width: 45%; /* По умолчанию занимаем 45% ширины */
+            width: 45%;
         }
 
         .form-item label {
@@ -167,9 +167,10 @@
             document.getElementById('results').innerHTML = '';
         }
 
-        function calculateArbitrage(bank, coefficients) {
+        function calculateArbitrage(bank, coefficients, commission = 0.02, minStake = 10) {
             let bestArbitrage = null;
 
+            // Перебираем все комбинации коэффициентов
             for (let i = 0; i < coefficients.length; i++) {
                 for (let j = i + 1; j < coefficients.length; j++) {
                     for (let k = j + 1; k < coefficients.length; k++) {
@@ -180,9 +181,10 @@
                         const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
 
                         if (totalInverse < 1) {
-                            const stake1 = (bank / k1) / totalInverse;
-                            const stake2 = (bank / k2) / totalInverse;
-                            const stake3 = (bank / k3) / totalInverse;
+                            // Учитываем комиссию
+                            const stake1 = Math.max((bank / k1) / totalInverse / (1 + commission), minStake);
+                            const stake2 = Math.max((bank / k2) / totalInverse / (1 + commission), minStake);
+                            const stake3 = Math.max((bank / k3) / totalInverse / (1 + commission), minStake);
                             const profit = (bank / totalInverse - bank).toFixed(2);
 
                             if (!bestArbitrage || profit > bestArbitrage.profit) {
@@ -216,8 +218,8 @@
             }
 
             const bestArbitrage = calculateArbitrage(bank, coefficients);
-            const results = document.getElementById('results');
 
+            const results = document.getElementById('results');
             if (bestArbitrage) {
                 const { fields, stakes, profit } = bestArbitrage;
 
@@ -226,44 +228,8 @@
                     <div>Ставка на ${fields[0]}: <b>${stakes[0].toFixed(2)} ₽</b></div>
                     <div>Ставка на ${fields[1]}: <b>${stakes[1].toFixed(2)} ₽</b></div>
                     <div>Ставка на ${fields[2]}: <b>${stakes[2].toFixed(2)} ₽</b></div>
-                    <div style="color: #22c55e;">Гарантированная прибыль: <b>${profit} ₽</b></div>
-                `;
+                    <div style
 
-                fields.forEach(field => {
-                    document.getElementById(field).style.backgroundColor = '#14532d';
-                });
-            } else {
-                results.innerHTML = '<div>Вилка не найдена.</div>';
-            }
-        }
-
-        function autoFormatAndMove(event) {
-            const input = event.target;
-            const value = input.value;
-
-            if (value.length === 1 && !value.includes('.')) {
-                input.value = value + '.';
-            }
-
-            if (value.length === 4) {
-                const formElements = Array.from(document.querySelectorAll('.form-container input'));
-                const currentIndex = formElements.indexOf(input);
-                if (currentIndex !== -1 && currentIndex < formElements.length - 1) {
-                    formElements[currentIndex + 1].focus();
-                }
-            }
-        }
-
-        document.querySelectorAll('.form-container input').forEach(input => {
-            input.addEventListener('input', autoFormatAndMove);
-        });
-
-        document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
-        document.getElementById('clearButton').addEventListener('click', clearForm);
-    </script>
-
-</body>
-</html>
 
 
 
