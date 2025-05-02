@@ -17,7 +17,7 @@ function clearForm() {
     document.getElementById('results').innerHTML = '';
 }
 
-function calculateArbitrage(bank, coefficients) {
+function calculateArbitrage(bank, coefficients, commission = 0.02, minStake = 10) {
     let bestArbitrage = null;
 
     // Перебираем все комбинации коэффициентов
@@ -31,9 +31,10 @@ function calculateArbitrage(bank, coefficients) {
                 const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
 
                 if (totalInverse < 1) {
-                    const stake1 = (bank / k1) / totalInverse;
-                    const stake2 = (bank / k2) / totalInverse;
-                    const stake3 = (bank / k3) / totalInverse;
+                    // Учитываем комиссию
+                    const stake1 = Math.max((bank / k1) / totalInverse / (1 + commission), minStake);
+                    const stake2 = Math.max((bank / k2) / totalInverse / (1 + commission), minStake);
+                    const stake3 = Math.max((bank / k3) / totalInverse / (1 + commission), minStake);
                     const profit = (bank / totalInverse - bank).toFixed(2);
 
                     if (!bestArbitrage || profit > bestArbitrage.profit) {
@@ -59,7 +60,6 @@ function checkArbitrage() {
         return;
     }
 
-    // Собираем коэффициенты из формы
     const coefficients = [];
     for (let i = 1; i <= 14; i++) {
         const field = `field${i}`;
@@ -67,7 +67,6 @@ function checkArbitrage() {
         if (value) coefficients.push([field, value]);
     }
 
-    // Ищем лучшую вилку
     const bestArbitrage = calculateArbitrage(bank, coefficients);
 
     const results = document.getElementById('results');
@@ -92,3 +91,4 @@ function checkArbitrage() {
 
 document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
 document.getElementById('clearButton').addEventListener('click', clearForm);
+
