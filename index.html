@@ -48,25 +48,25 @@
 <body>
     <h1>Арбитражный калькулятор</h1>
 
-    <label>Банк: <input type="text" id="bankAmount"></label>
+    <label>Банк: <input type="text" id="bankAmount" inputmode="decimal" pattern="\d*"></label>
     <div id="inputs">
         <div>
-            <input id="field1" placeholder="П1">
-            <input id="field3" placeholder="ТМ 16.5">
-            <input id="field5" placeholder="ТМ 17.5">
-            <input id="field7" placeholder="ТМ 18.5">
-            <input id="field9" placeholder="ТМ 19.5">
-            <input id="field11" placeholder="ТМ 20.5">
-            <input id="field13" placeholder="Чет">
+            <input id="field1" placeholder="П1" inputmode="decimal" pattern="\d*">
+            <input id="field3" placeholder="ТМ 16.5" inputmode="decimal" pattern="\d*">
+            <input id="field5" placeholder="ТМ 17.5" inputmode="decimal" pattern="\d*">
+            <input id="field7" placeholder="ТМ 18.5" inputmode="decimal" pattern="\d*">
+            <input id="field9" placeholder="ТМ 19.5" inputmode="decimal" pattern="\d*">
+            <input id="field11" placeholder="ТМ 20.5" inputmode="decimal" pattern="\d*">
+            <input id="field13" placeholder="Чет" inputmode="decimal" pattern="\d*">
         </div>
         <div>
-            <input id="field2" placeholder="П2">
-            <input id="field4" placeholder="ТБ 16.5">
-            <input id="field6" placeholder="ТБ 17.5">
-            <input id="field8" placeholder="ТБ 18.5">
-            <input id="field10" placeholder="ТБ 19.5">
-            <input id="field12" placeholder="ТБ 20.5">
-            <input id="field14" placeholder="Нечет">
+            <input id="field2" placeholder="П2" inputmode="decimal" pattern="\d*">
+            <input id="field4" placeholder="ТБ 16.5" inputmode="decimal" pattern="\d*">
+            <input id="field6" placeholder="ТБ 17.5" inputmode="decimal" pattern="\d*">
+            <input id="field8" placeholder="ТБ 18.5" inputmode="decimal" pattern="\d*">
+            <input id="field10" placeholder="ТБ 19.5" inputmode="decimal" pattern="\d*">
+            <input id="field12" placeholder="ТБ 20.5" inputmode="decimal" pattern="\d*">
+            <input id="field14" placeholder="Нечет" inputmode="decimal" pattern="\d*">
         </div>
     </div>
 
@@ -236,18 +236,33 @@
             document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
             document.getElementById('clearButton').addEventListener('click', clearForm);
 
-            // Автоматическая точка и переход
-            const inputs = document.querySelectorAll('#inputs input');
-            inputs.forEach((input, index) => {
+            const orderedInputIds = [
+                'field1', 'field2',
+                'field3', 'field4',
+                'field5', 'field6',
+                'field7', 'field8',
+                'field9', 'field10',
+                'field11', 'field12',
+                'field13', 'field14'
+            ];
+
+            orderedInputIds.forEach((id, index) => {
+                const input = document.getElementById(id);
+                input.setAttribute('inputmode', 'decimal');
+                input.setAttribute('pattern', '\\d*');
+
                 input.addEventListener('input', function () {
-                    let val = input.value;
+                    const val = input.value;
+
                     if (/^\d$/.test(val)) {
                         input.value = val + '.';
                     }
 
                     if (/^\d\.\d{2}$/.test(input.value)) {
-                        const next = inputs[index + 1];
-                        if (next) next.focus();
+                        const nextId = orderedInputIds[index + 1];
+                        if (nextId) {
+                            document.getElementById(nextId).focus();
+                        }
                     }
                 });
             });
@@ -255,6 +270,7 @@
     </script>
 </body>
 </html>
+
 
 
 
