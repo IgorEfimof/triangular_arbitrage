@@ -10,6 +10,18 @@
             font-family: Arial, sans-serif;
             padding: 20px;
         }
+
+        #inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #inputs > div {
+            flex: 1;
+            min-width: 160px;
+        }
+
         input {
             width: 100px;
             padding: 5px;
@@ -18,6 +30,7 @@
             color: #eee;
             border: 1px solid #444;
         }
+
         button {
             padding: 10px 20px;
             margin: 10px 5px;
@@ -26,18 +39,7 @@
             border: none;
             cursor: pointer;
         }
-        #inputs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        #inputs > div {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1 1 200px;
-            min-width: 150px;
-        }
+
         #results {
             margin-top: 20px;
         }
@@ -47,24 +49,23 @@
     <h1>Арбитражный калькулятор</h1>
 
     <label>Банк: <input type="text" id="bankAmount"></label>
-
     <div id="inputs">
         <div>
             <input id="field1" placeholder="П1">
-            <input id="field2" placeholder="П2">
             <input id="field3" placeholder="ТМ 16.5">
-            <input id="field4" placeholder="ТБ 16.5">
             <input id="field5" placeholder="ТМ 17.5">
-            <input id="field6" placeholder="ТБ 17.5">
             <input id="field7" placeholder="ТМ 18.5">
+            <input id="field9" placeholder="ТМ 19.5">
+            <input id="field11" placeholder="ТМ 20.5">
+            <input id="field13" placeholder="Чет">
         </div>
         <div>
+            <input id="field2" placeholder="П2">
+            <input id="field4" placeholder="ТБ 16.5">
+            <input id="field6" placeholder="ТБ 17.5">
             <input id="field8" placeholder="ТБ 18.5">
-            <input id="field9" placeholder="ТМ 19.5">
             <input id="field10" placeholder="ТБ 19.5">
-            <input id="field11" placeholder="ТМ 20.5">
             <input id="field12" placeholder="ТБ 20.5">
-            <input id="field13" placeholder="Чет">
             <input id="field14" placeholder="Нечет">
         </div>
     </div>
@@ -211,12 +212,15 @@
                     }
                 });
 
+                let profitColor = parseFloat(profit) >= 0 ? '#22c55e' : '#f87171';
+                let profitNote = parseFloat(profit) >= 0 ? "Прибыль" : "Убыток";
+
                 results.innerHTML = `
                     <div><strong>Расчет выполнен:</strong></div>
                     <div>Ставка на ${displayFields[0]}: <b>${Math.round(stakes[0])} ₽</b></div>
                     <div>Ставка на ${displayFields[1]}: <b>${Math.round(stakes[1])} ₽</b></div>
                     <div>Ставка на ${displayFields[2]}: <b>${Math.round(stakes[2])} ₽</b></div>
-                    <div style="color: #22c55e;">Прибыль: <b>${profit} ₽</b></div>
+                    <div style="color: ${profitColor};">${profitNote}: <b>${profit} ₽</b></div>
                     <div style="margin-top: 10px; font-style: italic;">${explanation}</div>
                 `;
 
@@ -231,10 +235,27 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
             document.getElementById('clearButton').addEventListener('click', clearForm);
+
+            // Автоматическая точка и переход
+            const inputs = document.querySelectorAll('#inputs input');
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', function () {
+                    let val = input.value;
+                    if (/^\d$/.test(val)) {
+                        input.value = val + '.';
+                    }
+
+                    if (/^\d\.\d{2}$/.test(input.value)) {
+                        const next = inputs[index + 1];
+                        if (next) next.focus();
+                    }
+                });
+            });
         });
     </script>
 </body>
 </html>
+
 
 
 
