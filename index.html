@@ -13,7 +13,7 @@
         input {
             width: 100px;
             padding: 5px;
-            margin: 4px;
+            margin: 4px 0;
             background-color: #222;
             color: #eee;
             border: 1px solid #444;
@@ -26,6 +26,18 @@
             border: none;
             cursor: pointer;
         }
+        #inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        #inputs > div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1 1 200px;
+            min-width: 150px;
+        }
         #results {
             margin-top: 20px;
         }
@@ -35,6 +47,7 @@
     <h1>Арбитражный калькулятор</h1>
 
     <label>Банк: <input type="text" id="bankAmount"></label>
+
     <div id="inputs">
         <div>
             <input id="field1" placeholder="П1">
@@ -44,6 +57,8 @@
             <input id="field5" placeholder="ТМ 17.5">
             <input id="field6" placeholder="ТБ 17.5">
             <input id="field7" placeholder="ТМ 18.5">
+        </div>
+        <div>
             <input id="field8" placeholder="ТБ 18.5">
             <input id="field9" placeholder="ТМ 19.5">
             <input id="field10" placeholder="ТБ 19.5">
@@ -220,6 +235,7 @@
     </script>
 </body>
 </html>
+
 
 
 
