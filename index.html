@@ -2,166 +2,225 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Арбитражная вилка</title>
+    <title>Арбитражный калькулятор</title>
     <style>
         body {
+            background-color: #111;
+            color: #eee;
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .form-container,
-        .results-section,
-        .bank-section {
-            background-color: #1c1c1c;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 600px;
-            margin-top: 20px;
         }
-
-        .form-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            justify-content: space-between;
-        }
-
-        .form-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-            width: auto;
-        }
-
-        .form-item label {
-            font-size: 14px;
-        }
-
-        .form-item input {
-            background-color: #222;
-            color: #fff;
-            border: 1px solid #444;
-            border-radius: 5px;
+        input {
+            width: 100px;
             padding: 5px;
-            font-size: 14px;
-            width: 60px;
-            text-align: center;
-        }
-
-        .results-section div {
-            margin-bottom: 8px;
-        }
-
-        .bank-section label {
-            font-size: 16px;
-        }
-
-        .bank-section input {
-            margin-left: 10px;
-            width: 120px;
-            padding: 8px;
-            border-radius: 5px;
+            margin: 4px;
             background-color: #222;
-            color: #fff;
+            color: #eee;
             border: 1px solid #444;
         }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .button-container button {
+        button {
             padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #444;
+            margin: 10px 5px;
+            background-color: #333;
             color: #fff;
+            border: none;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
         }
-
-        .button-container button:hover {
-            background-color: #555;
-        }
-
-        /* Адаптация для экранов меньше 768px */
-        @media (max-width: 768px) {
-            .form-container {
-                gap: 5px;
-            }
-            .form-item input {
-                width: 50px;
-            }
-            .form-item label {
-                font-size: 14px;
-                margin-right: 5px;
-            }
-        }
-
-        /* Адаптация для экранов меньше 480px */
-        @media (max-width: 480px) {
-            .form-item label {
-                font-size: 12px;
-            }
-            .form-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        #results {
+            margin-top: 20px;
         }
     </style>
 </head>
-
 <body>
+    <h1>Арбитражный калькулятор</h1>
 
-    <div class="bank-section">
-        <label for="bankAmount">Банк (₽):</label>
-        <input type="number" id="bankAmount" placeholder="Введите сумму банка" inputmode="numeric">
+    <label>Банк: <input type="text" id="bankAmount"></label>
+    <div id="inputs">
+        <div>
+            <input id="field1" placeholder="П1">
+            <input id="field2" placeholder="П2">
+            <input id="field3" placeholder="ТМ 16.5">
+            <input id="field4" placeholder="ТБ 16.5">
+            <input id="field5" placeholder="ТМ 17.5">
+            <input id="field6" placeholder="ТБ 17.5">
+            <input id="field7" placeholder="ТМ 18.5">
+            <input id="field8" placeholder="ТБ 18.5">
+            <input id="field9" placeholder="ТМ 19.5">
+            <input id="field10" placeholder="ТБ 19.5">
+            <input id="field11" placeholder="ТМ 20.5">
+            <input id="field12" placeholder="ТБ 20.5">
+            <input id="field13" placeholder="Чет">
+            <input id="field14" placeholder="Нечет">
+        </div>
     </div>
 
-    <!-- Форма для ввода коэффициентов -->
-    <form class="form-container">
-        <div class="form-item"><label for="field1">1</label><input type="text" id="field1" inputmode="numeric"></div>
-        <div class="form-item"><label for="field2">2</label><input type="text" id="field2" inputmode="numeric"></div>
-        <div class="form-item"><label for="field3">ТМ (16.5)</label><input type="text" id="field3" inputmode="numeric"></div>
-        <div class="form-item"><label for="field4">ТБ (16.5)</label><input type="text" id="field4" inputmode="numeric"></div>
-        <div class="form-item"><label for="field5">ТМ (17.5)</label><input type="text" id="field5" inputmode="numeric"></div>
-        <div class="form-item"><label for="field6">ТБ (17.5)</label><input type="text" id="field6" inputmode="numeric"></div>
-        <div class="form-item"><label for="field7">ТМ (18.5)</label><input type="text" id="field7" inputmode="numeric"></div>
-        <div class="form-item"><label for="field8">ТБ (18.5)</label><input type="text" id="field8" inputmode="numeric"></div>
-        <div class="form-item"><label for="field9">ТМ (19.5)</label><input type="text" id="field9" inputmode="numeric"></div>
-        <div class="form-item"><label for="field10">ТБ (19.5)</label><input type="text" id="field10" inputmode="numeric"></div>
-        <div class="form-item"><label for="field11">ТМ (20.5)</label><input type="text" id="field11" inputmode="numeric"></div>
-        <div class="form-item"><label for="field12">ТБ (20.5)</label><input type="text" id="field12" inputmode="numeric"></div>
-        <div class="form-item"><label for="field13">Чет</label><input type="text" id="field13" inputmode="numeric"></div>
-        <div class="form-item"><label for="field14">Нечет</label><input type="text" id="field14" inputmode="numeric"></div>
-    </form>
+    <button id="calculateButton">Рассчитать</button>
+    <button id="clearButton">Очистить</button>
 
-    <div class="results-section" id="results"></div>
+    <div id="results"></div>
 
-    <div class="button-container">
-        <button type="button" id="calculateButton">Рассчитать</button>
-        <button type="button" id="clearButton">Очистить форму</button>
-    </div>
+    <script>
+        function parseVal(id) {
+            const val = parseFloat(document.getElementById(id).value.replace(',', '.'));
+            return isNaN(val) ? null : val;
+        }
 
-    <script src="ai-arbitrage.js"></script>
+        function clearHighlights() {
+            document.querySelectorAll('input').forEach(input => {
+                input.style.backgroundColor = '#222';
+            });
+        }
 
+        function clearForm() {
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = '#222';
+            });
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function calculateArbitrage(bank, coefficients, commission = 0.02, minStake = 10) {
+            let bestArbitrage = null;
+
+            for (let i = 0; i < coefficients.length - 2; i++) {
+                for (let j = i + 1; j < coefficients.length - 1; j++) {
+                    for (let k = j + 1; k < coefficients.length; k++) {
+                        const [field1, k1] = coefficients[i];
+                        const [field2, k2] = coefficients[j];
+                        const [field3, k3] = coefficients[k];
+
+                        if (!isValidCombination(field1, field2, field3)) continue;
+
+                        const totalInverse = (1 / k1) + (1 / k2) + (1 / k3);
+
+                        if (totalInverse < 1) {
+                            const baseStake = bank / totalInverse / (1 + commission);
+                            const stake1 = Math.max((baseStake / k1) * getWeightForMarket(field1), minStake);
+                            const stake2 = Math.max((baseStake / k2) * getWeightForMarket(field2), minStake);
+                            const stake3 = Math.max((baseStake / k3) * getWeightForMarket(field3), minStake);
+
+                            const totalStake = stake1 + stake2 + stake3;
+                            const minProfit = Math.min(
+                                stake1 * k1 - totalStake,
+                                stake2 * k2 - totalStake,
+                                stake3 * k3 - totalStake
+                            );
+
+                            if (!bestArbitrage || minProfit > bestArbitrage.profit) {
+                                bestArbitrage = {
+                                    fields: [field1, field2, field3],
+                                    stakes: [stake1, stake2, stake3],
+                                    profit: minProfit.toFixed(2),
+                                    explanation: getStrategyExplanation(field1, field2, field3)
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+
+            return bestArbitrage;
+        }
+
+        function isValidCombination(field1, field2, field3) {
+            return field1 !== field2 && field2 !== field3 && field1 !== field3;
+        }
+
+        function getWeightForMarket(field) {
+            if (field === 'field1' || field === 'field2') return 1.2;
+            if (field.includes('field3') || field.includes('field4')) return 1.1;
+            if (field === 'field13' || field === 'field14') return 0.9;
+            return 1.0;
+        }
+
+        function getStrategyExplanation(field1, field2, field3) {
+            let explanation = "Рекомендация: ";
+
+            if ([field1, field2, field3].some(f => f.includes('field3'))) {
+                explanation += "Тотал меньше часто проходит в матчах с явным фаворитом. ";
+            }
+            if ([field1, field2, field3].includes('field13')) {
+                explanation += "Чётный тотал вероятнее в равных матчах. ";
+            }
+
+            return explanation;
+        }
+
+        function checkArbitrage() {
+            clearHighlights();
+            const bank = parseVal('bankAmount');
+            if (!bank) {
+                document.getElementById('results').innerHTML = '<div style="color: #ff4444;">Ошибка: Введите сумму банка!</div>';
+                return;
+            }
+
+            const coefficients = [];
+            for (let i = 1; i <= 14; i++) {
+                const field = `field${i}`;
+                const value = parseVal(field);
+                if (value) {
+                    coefficients.push([field, value]);
+                }
+            }
+
+            if (coefficients.length < 3) {
+                document.getElementById('results').innerHTML = '<div style="color: #ff4444;">Ошибка: Введите минимум 3 коэффициента!</div>';
+                return;
+            }
+
+            const results = document.getElementById('results');
+            results.innerHTML = '<div>Идет расчет...</div>';
+
+            const bestArbitrage = calculateArbitrage(bank, coefficients);
+
+            if (bestArbitrage) {
+                const { fields, stakes, profit, explanation } = bestArbitrage;
+
+                const displayFields = fields.map(field => {
+                    switch (field) {
+                        case 'field1': return 'П1';
+                        case 'field2': return 'П2';
+                        case 'field3': return 'ТМ (16.5)';
+                        case 'field4': return 'ТБ (16.5)';
+                        case 'field5': return 'ТМ (17.5)';
+                        case 'field6': return 'ТБ (17.5)';
+                        case 'field7': return 'ТМ (18.5)';
+                        case 'field8': return 'ТБ (18.5)';
+                        case 'field9': return 'ТМ (19.5)';
+                        case 'field10': return 'ТБ (19.5)';
+                        case 'field11': return 'ТМ (20.5)';
+                        case 'field12': return 'ТБ (20.5)';
+                        case 'field13': return 'Чет';
+                        case 'field14': return 'Нечет';
+                        default: return field;
+                    }
+                });
+
+                results.innerHTML = `
+                    <div><strong>Расчет выполнен:</strong></div>
+                    <div>Ставка на ${displayFields[0]}: <b>${Math.round(stakes[0])} ₽</b></div>
+                    <div>Ставка на ${displayFields[1]}: <b>${Math.round(stakes[1])} ₽</b></div>
+                    <div>Ставка на ${displayFields[2]}: <b>${Math.round(stakes[2])} ₽</b></div>
+                    <div style="color: #22c55e;">Прибыль: <b>${profit} ₽</b></div>
+                    <div style="margin-top: 10px; font-style: italic;">${explanation}</div>
+                `;
+
+                fields.forEach(field => {
+                    document.getElementById(field).style.backgroundColor = '#14532d';
+                });
+            } else {
+                results.innerHTML = '<div style="color: #f87171;">Вилка не найдена.</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('calculateButton').addEventListener('click', checkArbitrage);
+            document.getElementById('clearButton').addEventListener('click', clearForm);
+        });
+    </script>
 </body>
 </html>
+
 
 
 
